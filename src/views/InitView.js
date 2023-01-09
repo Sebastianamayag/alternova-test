@@ -18,8 +18,8 @@ export const InitView = ({navigation}) => {
 
 
     return (
-        <View>
-            <ActivityIndicator size={'large'} color={'green'}/>
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}} >
+            <ActivityIndicator size={'large'} color={'#e61f6d'}/>
         </View>
     )
 }

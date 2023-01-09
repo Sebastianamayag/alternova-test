@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { baseURL } from '../../config/globalConfig';
 import { generateDispatch } from '../../functions/otherFunctions';
-import { ADD_PRODUCT_CART, BUY_PRODUCTS_SUCCESS, GET_PRODUCTS_SUCCEES ,GET_PRODUCT_SUCCEES} from '../types/types';
+import { ADD_PRODUCT_CART, BUY_PRODUCTS_SUCCESS, DELETE_PRODUCT_CART, GET_PRODUCTS_SUCCEES ,GET_PRODUCT_NONE,GET_PRODUCT_SUCCEES} from '../types/types';
 
 export const getAllItems =()=>{
     return async(dispatch, getState) => {
@@ -23,6 +23,12 @@ export const getOneItem=(id)=>{
     }
 }
 
+
+export const getOneItemnone=()=>{
+    return async(dispatch) => {
+        dispatch(generateDispatch(GET_PRODUCT_NONE));
+    }
+}
 
 export const addProductCart =(product)=>{
     return async(dispatch, getState) => {
@@ -49,7 +55,7 @@ export const addProductCart =(product)=>{
                         return 0
                     }
                 })
-                dispatch(generateDispatch(ADD_PRODUCT_CART,{total,products:prodDif,is:true,newProducts}))
+                dispatch(generateDispatch(ADD_PRODUCT_CART,{total,products:prodDif,is:true,newProducts,id:product.id}))
             }
         }
     }
@@ -58,19 +64,29 @@ export const addProductCart =(product)=>{
 
 export const deleteProductCart =(product)=>{
     return async(dispatch, getState) => {
-        let total=getState().Cart.total;
-        let products=getState().Cart.selectedProducts;
-        if(products.length===0){
-            total=total+product.unit_price;
-            products=product;
-            dispatch(generateDispatch(ADD_PRODUCT_CART,{total,products}))
+        let total=getState().Products.total;
+        let products=getState().Products.selectedProducts;
+        let prod=products.find((data)=>data.id===product.id)
+        if(products.length>0&&prod){
+            let productsBD=getState().Products.newProducts.filter((data)=>data.id!==product.id);
+            let newSelected=[];
+            let newProducts=[...productsBD,{...product,stock:product.stock+1,count:product.count-1}];
+            newProducts=newProducts.sort((a,b)=>{
+                if(a.id<b.id){
+                    return -1
+                }else if(b.id>a.id){
+                    return 1
+                }else{
+                    return 0
+                }
+            })
+            newSelected=products.filter((data)=>data.id!==product.id);
+            if(prod.count>1){
+                newSelected=[...newSelected,{...product,stock:product.stock+1,count:product.count-1}];
+            }
+            total=total-product.unit_price;
+            dispatch(generateDispatch(DELETE_PRODUCT_CART,{total,selected:newSelected,products:newProducts,id:product.id}))
         }
-        // if(action==='+'){
-        //     total=total+product.unit_price;
-        // }else{
-        //     total=total-product.unit_price;
-        // }
-        // dispatch(generateDispatch(GET_PRODUCTS_SUCCEES,productsBD));
     }
 };
 
@@ -80,7 +96,8 @@ export const buyProducts=()=>{
         const data=await axios.post(`${baseURL}buy`);
         const response=data.data;
         if(response.products){
-            dispatch(generateDispatch(BUY_PRODUCTS_SUCCESS,{products:response.products}));
+            const newProducts = response.products.reduce((acc,el)=>acc.concat({...el,["count"]:0}),[]);
+            dispatch(generateDispatch(BUY_PRODUCTS_SUCCESS,{products:newProducts}));
         }
     }
 }

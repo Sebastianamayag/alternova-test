@@ -38,7 +38,7 @@ export const HomeView = ({ navigation, route }) => {
             <Item navigation={navigation} key={dat.id} item={dat} />
           ))
         }
-        <ButtonCart />
+        <ButtonCart text={'Ir al carrito'} navigation={navigation} />
       </ScrollView>
     </View>
   )

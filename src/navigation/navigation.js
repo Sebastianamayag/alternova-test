@@ -6,6 +6,7 @@ import { HomeView } from '../views/HomeView';
 import { InitView } from '../views/InitView';
 import { ProductView } from '../views/ProductView';
 import { useSelector } from 'react-redux';
+import { CartView } from '../views/CartView';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ export const Navigation = () => {
                 <Stack.Screen name="Auth" component={AuthView} />
                 <Stack.Screen name="Home" component={HomeView} />
                 <Stack.Screen name="ProductView" component={ProductView} />
+                <Stack.Screen name="CartView" component={CartView} />
             </Stack.Navigator>
         </NavigationContainer>
     )

@@ -1,10 +1,11 @@
 import React from 'react'
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from  'react-native-vector-icons/FontAwesome'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { useDispatch } from 'react-redux';
-import { addProductCart } from '../store/actions/productsActions';
+import { addProductCart, deleteProductCart } from '../store/actions/productsActions';
+
 export const Item = ({ item,navigation }) => {
     const dispatch = useDispatch();
     return (
@@ -22,18 +23,19 @@ export const Item = ({ item,navigation }) => {
                     </View>
                     <View style={style.containerButtom}>
                         <Text style={style.priceTextCard} maxFontSizeMultiplier={1} >${item.unit_price}</Text>
-                        <View style={{width:wp(15),flexDirection:'row',justifyContent:'space-between',paddingRight:wp(3)}}>
-                            {/* <Icon name='trash-o' size={wp(2)} /> */}
-                            <TouchableOpacity>
-                                <Text>-</Text>
+                        <View style={{width:wp(25),flexDirection:'row',alignItems:'center',justifyContent:'space-between',paddingRight:wp(3)}}>
+                            <TouchableOpacity
+                                onPress={()=>dispatch(deleteProductCart(item))}
+                            >
+                                <Icon name='trash-o' size={RFPercentage(3)} />
                             </TouchableOpacity>
                             <TouchableOpacity>
-                                <Text>{item.count}</Text>
+                                <Text style={style.textButton} >{item.count}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={()=>dispatch(addProductCart(item))}
                             >
-                                <Text>+</Text>
+                                <Icon name='plus' size={RFPercentage(3)} color={'#e61f6d'} />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -102,5 +104,10 @@ const style = StyleSheet.create({
         padding: wp(2),
         borderRadius: wp(3),
         width: wp(30),
+    },
+    textButton:{
+        fontSize:RFPercentage(3),
+        fontWeight:'bold',
+        color:'#e61f6d'
     }
 })
