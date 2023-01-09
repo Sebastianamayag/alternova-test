@@ -7,6 +7,16 @@ export const style = StyleSheet.create({
       fontSize: RFPercentage(3.5),
       marginVertical: hp(2),
       color: '#e61f6d',
-      textAlign:'center'
-    }
+      textAlign:'center',
+      borderBottomWidth: hp(0.2), 
+      borderBottomColor: '#ededed'
+    },
+    titleNotFound: {
+      fontWeight: '600',
+      fontSize: RFPercentage(3),
+      marginVertical: hp(2),
+      color: 'black',
+      textAlign:'justify'
+    },
+
   })

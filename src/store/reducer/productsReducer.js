@@ -1,4 +1,4 @@
-import { ADD_PRODUCT_CART, BUY_PRODUCTS_SUCCESS, DELETE_PRODUCT_CART, GET_PRODUCT_SUCCEES, GET_PRODUCTS_ATTEMPT, GET_PRODUCTS_SUCCEES, STATUS, GET_PRODUCT_NONE } from "../types/types";
+import { ADD_PRODUCT_CART, BUY_PRODUCTS_SUCCESS, DELETE_PRODUCT_CART, GET_PRODUCT_SUCCEES, GET_PRODUCTS_ATTEMPT, GET_PRODUCTS_SUCCEES, STATUS, GET_PRODUCT_NONE, GET_PRODUCT_ATTEMPT } from "../types/types";
 
 const initialState = {
     getProducts: {
@@ -26,11 +26,15 @@ export const productsReducer = (state = initialState, action) => {
     let newState = { ...state }
     switch (action.type) {
         case GET_PRODUCTS_ATTEMPT:
+            newState.getProducts.status = STATUS.LOADING;
             return newState;
         case GET_PRODUCTS_SUCCEES:
             newState.getProducts.products = action.payload;
             newState.getProducts.status = STATUS.SUCCESS;
             newState.getProducts.errors = {};
+            return newState;
+        case GET_PRODUCT_ATTEMPT:
+            newState.getProduct.status = STATUS.LOADING;
             return newState;
         case GET_PRODUCT_SUCCEES:
             newState.getProduct.product = action.payload;
@@ -46,10 +50,10 @@ export const productsReducer = (state = initialState, action) => {
             if (!action.payload.is) {
                 newState.selectedProducts.push(action.payload.products)
                 let prod = []
-                if(newState.newProducts.length===0){
-                    prod=newState.getProducts.products.filter((data) => data.id !== action.payload.products.id)
-                }else{
-                    prod=newState.newProducts.filter((data) => data.id !== action.payload.products.id)
+                if (newState.newProducts.length === 0) {
+                    prod = newState.getProducts.products.filter((data) => data.id !== action.payload.products.id)
+                } else {
+                    prod = newState.newProducts.filter((data) => data.id !== action.payload.products.id)
                 }
                 prod = [...prod, action.payload.products]
                 prod = prod.sort((a, b) => {
@@ -80,11 +84,11 @@ export const productsReducer = (state = initialState, action) => {
         case DELETE_PRODUCT_CART:
             newState.selectedProducts = action.payload.selected;
             newState.total = action.payload.total;
-            newState.newProducts=action.payload.products;
-            if(newState.getProduct.product.length !== 0){
+            newState.newProducts = action.payload.products;
+            if (newState.getProduct.product.length !== 0) {
                 let prodBD = action.payload.products.find((data) => data.id === action.payload.id);
-                newState.getProduct.product.stock=prodBD.stock;
-                newState.getProduct.product.count=prodBD.count;
+                newState.getProduct.product.stock = prodBD.stock;
+                newState.getProduct.product.count = prodBD.count;
             }
             return newState;
         case BUY_PRODUCTS_SUCCESS:
@@ -92,12 +96,12 @@ export const productsReducer = (state = initialState, action) => {
             newState.buyProducts.message = '';
             newState.buyProducts.success = true;
             newState.newProducts = action.payload.products;
-            newState.total=0;
-            newState.selectedProducts=[];
-            if(newState.getProduct.product.length !== 0){
+            newState.total = 0;
+            newState.selectedProducts = [];
+            if (newState.getProduct.product.length !== 0) {
                 let prodBD = action.payload.products.find((data) => data.name === newState.getProduct.product.name);
-                newState.getProduct.product.stock=prodBD.stock;
-                newState.getProduct.product.count=0;
+                newState.getProduct.product.stock = prodBD.stock;
+                newState.getProduct.product.count = 0;
             }
             return newState;
         default:

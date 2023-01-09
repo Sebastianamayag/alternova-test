@@ -1,8 +1,10 @@
 import React from 'react'
-import { TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-export const AlertComponent = ({title,visible,closeModal}) => {
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import IconAwesome from 'react-native-vector-icons/FontAwesome';
+export const AlertComponent = ({title,visible,closeModal,colorTitle,message}) => {
     return (
         <Modal
             backdropOpacity={0.7}
@@ -21,14 +23,13 @@ export const AlertComponent = ({title,visible,closeModal}) => {
                             <IconAwesome
                                 size={wp(5)}
                                 name={'close'}
-                                color={colors.primary}
+                                color={'#e61f6e'}
                                 style={{ alignSelf: 'center' }}
                             />
                         </View>
                     </TouchableOpacity>
-                    <Text>{title}</Text>
-                    {/* <TextSimple style={style.title} text={title} /> */}
-
+                    <Text style={[style.title,{color:colorTitle}]}>{title}</Text>
+                    <Text style={style.descriptionRegular}>{message}</Text>
                 </View>
             </View>
         </Modal>
@@ -49,8 +50,8 @@ const style=StyleSheet.create({
     },
     containerClose: {
         position: 'absolute',
-        top: -hp(10),
-        right: -wp(2),
+        top: -hp(4),
+        right: -wp(1),
         borderRadius: wp(3.5),
         zIndex: 1,
         padding: wp(1),

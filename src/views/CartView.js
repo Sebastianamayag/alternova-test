@@ -35,6 +35,11 @@ export const CartView = ({ navigation }) => {
                         <Item navigation={navigation} key={data.id} item={data} />
                     ))
                 }
+                {
+                    products.length===0 &&(
+                        <Text style={style.titleNotFound} >No ha seleccionado productos</Text>
+                    )
+                }
                 <ButtonCart text={'Comprar'} navigation={navigation} />
             </ScrollView>
         </View>

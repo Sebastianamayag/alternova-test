@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackHandler, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, BackHandler, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Icon from  'react-native-vector-icons/FontAwesome'
@@ -7,12 +7,14 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { ButtonCart } from '../components/ButtonCart';
 import { style } from '../styles/globalStyle';
 import { addProductCart, deleteProductCart, getOneItem, getOneItemnone } from '../store/actions/productsActions'
+import { STATUS } from '../store/types/types';
 export const ProductView = ({ navigation, route }) => {
     const dispatch = useDispatch();
     const id = route.params.id ? route.params.id : 0;
     const product = useSelector(state => state.Products.getProduct.product);
     const prod = useSelector(state => state.Products.newProducts.find((data)=>data.id===id));
     const prod2 = useSelector(state => state.Products.getProducts.products.find((data)=>data.id===id));
+    const productStatus = useSelector(state => state.Products.getProduct.status);
     useEffect(() => {
         dispatch(getOneItem(id));
     }, [])
@@ -30,7 +32,13 @@ export const ProductView = ({ navigation, route }) => {
 
         return () => backHandler.remove();
     }, []);
-
+    if(productStatus===STATUS.LOADING){
+        return(
+          <View style={{flex:1,justifyContent:'center',alignItems:'center'}} >
+            <ActivityIndicator size={hp(10)} color={'#e61f6d'}/>
+          </View>
+        )
+      }
     return (
         <View>
             <Image style={styles.image} source={{ uri: product.image }} />

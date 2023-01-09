@@ -4,7 +4,7 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 export const ButtonAuth = ({ color, action ,text,textColor}) => {
     return (
-        <TouchableOpacity onPress={action}>
+        <TouchableOpacity onPress={()=>action()}>
             <View style={[style.button,{ backgroundColor: color }]}>
                 <Text style={[style.textButton,{color:textColor}]} >{text}</Text>
             </View>

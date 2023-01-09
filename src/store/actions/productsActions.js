@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { baseURL } from '../../config/globalConfig';
 import { generateDispatch } from '../../functions/otherFunctions';
-import { ADD_PRODUCT_CART, BUY_PRODUCTS_SUCCESS, DELETE_PRODUCT_CART, GET_PRODUCTS_SUCCEES ,GET_PRODUCT_NONE,GET_PRODUCT_SUCCEES} from '../types/types';
+import { ADD_PRODUCT_CART, BUY_PRODUCTS_SUCCESS, DELETE_PRODUCT_CART, GET_PRODUCTS_ATTEMPT, GET_PRODUCTS_SUCCEES ,GET_PRODUCT_ATTEMPT,GET_PRODUCT_NONE,GET_PRODUCT_SUCCEES} from '../types/types';
 
 export const getAllItems =()=>{
     return async(dispatch, getState) => {
+        dispatch(generateDispatch(GET_PRODUCTS_ATTEMPT));
         const data=await axios.get(`${baseURL}all-products`);
         const productsBD=data.data.products;
         const newProducts = productsBD.reduce((acc,el)=>acc.concat({...el,["count"]:0}),[]);
@@ -15,6 +16,7 @@ export const getAllItems =()=>{
 
 export const getOneItem=(id)=>{
     return async(dispatch,getState) => {
+        dispatch(generateDispatch(GET_PRODUCT_ATTEMPT));
         const data=await axios.get(`${baseURL}detail/${id}`);
         let productsBD=data.data;
         const product=getState().Products.newProducts.find((data)=>data.id===id);
